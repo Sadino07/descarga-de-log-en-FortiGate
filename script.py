@@ -47,8 +47,8 @@ options.add_experimental_option("prefs", prefs)
 
 # Configuración de credenciales y URL
 fortigate_url = "https://172.23.0.250/login"
-username = "sdiaz"
-password = "Santiago1234!"
+username = ""
+password = ""
 users_to_filter = ["u62061", "u62699", "u61622"]
 
 # Configuración del WebDriver
@@ -62,7 +62,7 @@ wait = WebDriverWait(driver, 10)
 
 
 try:
-    # Paso 1: Navegar al sitio e iniciar sesión
+    # Navegar al sitio e iniciar sesión
     driver.get(fortigate_url)
 
     try:
@@ -78,16 +78,16 @@ try:
     driver.find_element(By.ID, "password").send_keys(password)
     driver.find_element(By.ID, "login_button").click()
 
-    # Paso 2: Ir a Log & Report > System Events
+    # Ir a Log & Report > System Events
     wait.until(EC.presence_of_element_located((By.LINK_TEXT, "Log & Report"))).click()
     wait.until(EC.presence_of_element_located((By.LINK_TEXT, "System Events"))).click()
 
-    # Paso 3: Cambiar el filtro a "VPN Events"
+    # Cambiar el filtro a "VPN Events"
     event_filter = wait.until(EC.presence_of_element_located((By.ID, "event_filter_dropdown")))
     event_filter.click()
     wait.until(EC.presence_of_element_located((By.XPATH, "//option[text()='VPN Events']"))).click()
 
-    # Paso 4: Configurar el filtro de fecha al día anterior
+    # Configurar el filtro de fecha al día anterior
     yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d')
     date_filter_start = driver.find_element(By.ID, "start_date_input")  # Cambia ID según corresponda
     date_filter_start.clear()
@@ -97,7 +97,7 @@ try:
     date_filter_end.clear()
     date_filter_end.send_keys(f"{yesterday} 23:59:59")
 
-    # Paso 5: Filtrar por cada usuario y descargar logs
+    # Filtrar por cada usuario y descargar logs
     for user in users_to_filter:
         user_filter = driver.find_element(By.ID, "user_filter_input")  # Cambia ID según corresponda
         user_filter.clear()
